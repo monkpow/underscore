@@ -1370,6 +1370,24 @@
 
   _.property = property;
 
+  // Generates a function for a given object that returns the passed function's return value.
+  // Accepts a string or function literal for value.
+  // If value is a string, function assumes (and verifies) this string is a method name on the
+  // referenced object.
+  _.method = function (value) {
+    var isFunction = this.isFunction,
+        rest = this.rest,
+        func;
+
+    return function(obj) {
+      if (obj == null) { return; }
+      func = isFunction(value) ? value : obj[value];
+      if (func) {
+        return func.apply(obj, rest(arguments));
+      }
+    }
+  }
+
   // Generates a function for a given object that returns a given property.
   _.propertyOf = function(obj) {
     return obj == null ? function(){} : function(key) {
